@@ -1,0 +1,19 @@
+{
+  "name": "黄汉昇的工作台",
+  "short_name": "Hudson",
+  "description": "一天开十次的执行面板：律师 GEO 项目、今日计划、将来做、每日收尾",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ebe3d9",
+  "theme_color": "#f5f0e8",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
