@@ -820,7 +820,7 @@ const Store = (() => {
     /* ── 供云同步用 ── */
     _touch(){
       driver.set(NS + '_lastWrite', now());
-      if (typeof Sync !== 'undefined' && Sync.on && Sync.on()) Sync.schedule();
+      if (syncReady() && typeof Sync !== 'undefined' && Sync.on && Sync.on()) Sync.schedule();
     },
     mergeList,
     /** 把远端整包数据合并进本地。数组型逐条合并，单值取时间新的 */
@@ -1235,6 +1235,8 @@ const Settings = {
   renderSync(){
     const card = document.getElementById('syncCard');
     if (!card || typeof Sync === 'undefined') return;
+    // 当前托管环境没有同步后端（如 GitHub Pages）→ 整块藏起来，不给死开关
+    if (!syncReady()) { card.style.display = 'none'; return; }
     const on = Sync.on();
     document.getElementById('syncOff').style.display = on ? 'none' : 'block';
     document.getElementById('syncOn').style.display  = on ? 'block' : 'none';
@@ -1256,6 +1258,14 @@ const Settings = {
 };
 /* ==== 功能：设置 END ==== */
 
+
+/* 同步后端是 EdgeOne 的边缘函数（edge-functions/api/sync.js）。
+   部署到 GitHub Pages 时那边没有这个后端，于是整块同步功能自动隐藏——
+   免得点开开关、填好密码、却永远同步不上，看起来像坏了。
+   以后换回 EdgeOne + 自有域名时，这里会自己恢复，不用改代码。 */
+function syncReady(){
+  return !/\.github\.io$/i.test(location.hostname);
+}
 
 /* ==== 双端同步 START ====
    三条设计红线，破了就会烧掉免费额度或者丢数据：
